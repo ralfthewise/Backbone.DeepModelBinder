@@ -13,15 +13,15 @@ used as a drop in replacements.  Mirrored methods are:
 Examples
 --------
 
-    model = constructNestedBackboneModel();
-    binder = new Backbone.DeepModelBinder();
-    el = $('#some-el');
+    var model = constructNestedBackboneModel();
+    var binder = new Backbone.DeepModelBinder();
+    var el = $('#some-el');
 
     binder.bind(model, el, {'post.title': '.post-title'});
     binder.bind(model, el, {'post.comments[0].author.name': '.first-comment-author'});
     binder.bind(model, el, {'post.comments[-1].author.email': '.last-comment-author-email'});
 
-    modelBinderTriggers = {
+    var modelBinderTriggers = {
       '': 'change hiddenchange',
       '[contenteditable]': 'blur'
     };
