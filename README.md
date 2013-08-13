@@ -1,7 +1,13 @@
 Backbone.DeepModelBinder
 ========================
 
-Extension of Backbone.ModelBinder to support binding of nested/related Backbone models/collections
+Extension of Backbone.ModelBinder to support binding of nested/related Backbone models/collections.  Meant to
+be API compatible with Backbone.ModelBinder so it can be used as a drop in replacements.  Mirrored methods are:
+
+    bind(model, rootEl, attributeBindings, modelSetOptions)
+    bindCustomTriggers(model, rootEl, triggers, attributeBindings, modelSetOptions)
+    unbind()
+    
 
 Examples
 --------
