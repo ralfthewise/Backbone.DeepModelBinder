@@ -6,18 +6,7 @@ Extension of Backbone.ModelBinder to support binding of nested/related Backbone 
 Examples
 --------
 
-    model = new Backbone.Model({type: 'blog_post', publish_date: new Date()});
-    post = new Backbone.Model({title: 'My Awesome Blog Post'});
-    comments = new Backbone.Collection();
-    comment = new Backbone.Model({text: 'some silly comment'});
-    author = new Backbone.Model({name: 'ralfthewise', email: 'ralfthewise@gmail.com'});
-    
-    //setup the nesting
-    comment.set({author: author});
-    comments.add(comment);
-    post.set({comments: comments});
-    model.set({post: post});
-    
+    model = constructNestedBackboneModel();
     binder = new Backbone.DeepModelBinder();
     el = $('#some-el');
 
@@ -30,3 +19,21 @@ Examples
       '[contenteditable]': 'blur'
     };
     binder.bindCustomTriggers(model, el, modelBinderTriggers, {'post.title': '.post-title'});
+
+    
+    
+    var constructNestedBackboneModel = function() {
+      model = new Backbone.Model({type: 'blog_post', publish_date: new Date()});
+      post = new Backbone.Model({title: 'My Awesome Blog Post'});
+      comments = new Backbone.Collection();
+      comment = new Backbone.Model({text: 'some silly comment'});
+      author = new Backbone.Model({name: 'ralfthewise', email: 'ralfthewise@gmail.com'});
+    
+      //setup the nesting
+      comment.set({author: author});
+      comments.add(comment);
+      post.set({comments: comments});
+      model.set({post: post});
+    
+      return model;
+    }
