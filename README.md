@@ -13,6 +13,14 @@ used as a drop in replacements.  Mirrored methods are:
 Examples
 --------
 
+Pertinent calls:
+
+    binder.bind(model, el, {'post.title': '.post-title'});
+    binder.bind(model, el, {'post.comments[0].author.name': '.first-comment-author'});
+    binder.bind(model, el, {'post.comments[-1].author.email': '.last-comment-author-email'});
+
+Full example:
+
     var model = constructNestedBackboneModel();
     var binder = new Backbone.DeepModelBinder();
     var el = $('#some-el');
@@ -27,8 +35,6 @@ Examples
     };
     binder.bindCustomTriggers(model, el, modelBinderTriggers, {'post.title': '.post-title'});
 
-    
-    
     var constructNestedBackboneModel = function() {
       model = new Backbone.Model({type: 'blog_post', publish_date: new Date()});
       post = new Backbone.Model({title: 'My Awesome Blog Post'});
@@ -53,7 +59,7 @@ When you call:
       'post.comments[0].author.name': '.first-comment-author',
       'post.comments[0].author.email': '.first-comment-email',
     };
-    binder.bind(model, el, bindings);
+    binder.bind(blogPostModel, el, bindings);
 
 internally the deep binder is creating a chain of backbone objects to watch for changes.
 After the above call, the internal structure will look like:
@@ -68,7 +74,7 @@ After the above call, the internal structure will look like:
         },
         
         model: <Author Backbone.Model>,
-        modelBinder: <Backbone.ModelBinder used to bind the end of the chain ('name' and 'email' attributes)>,
+        modelBinder: <Backbone.ModelBinder used to bind the end/leaf of the chain ('name' and 'email' attributes)>,
 
         'bindings': {
           'name': '.first-comment-author',
@@ -76,3 +82,7 @@ After the above call, the internal structure will look like:
         }
       }
     }
+
+As part of creating this structure, the deep model binder binds to 'change' (for Backbone.Models) or
+'add remove sort reset' (for Backbone.Collections) events and when those events are triggered it
+rebuilds the chain and re-binds the leaf ModelBinder.
