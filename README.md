@@ -44,3 +44,35 @@ Examples
     
       return model;
     }
+    
+Internals
+---------
+When you call:
+
+    bindings = {
+      'post.comments[0].author.name': '.first-comment-author',
+      'post.comments[0].author.email': '.first-comment-email',
+    };
+    binder.bind(model, el, bindings);
+
+internally the deep binder is creating a chain of backbone objects to watch for changes.
+After the above call, the internal structure will look like:
+
+    bindingChains: {
+      'post.comments[0].author': {
+        'chainSteps': {
+          'post': <BlogPost Backbone.Model (top level model)>,
+          'post.comments': <Post Backbone.Model>,
+          'post.comments[0]': <Comments Backbone.Collection>,
+          'post.comments[0].author': <Comment Backbone.Model that was at [0]>
+        },
+        
+        model: <Author Backbone.Model>,
+        modelBinder: <Backbone.ModelBinder used to bind the end of the chain ('name' and 'email' attributes)>,
+
+        'bindings': {
+          'name': '.first-comment-author',
+          'email': '.first-comment-email',
+        }
+      }
+    }
