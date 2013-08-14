@@ -57,7 +57,7 @@ When you call:
 
     bindings = {
       'post.comments[0].author.name': '.first-comment-author',
-      'post.comments[0].author.email': '.first-comment-email',
+      'post.comments[0].author.email': '.first-comment-email'
     };
     binder.bind(blogPostModel, el, bindings);
 
@@ -78,7 +78,7 @@ After the above call, the internal structure will look like:
 
         'bindings': {
           'name': '.first-comment-author',
-          'email': '.first-comment-email',
+          'email': '.first-comment-email'
         }
       }
     }
