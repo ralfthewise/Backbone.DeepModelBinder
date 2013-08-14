@@ -75,7 +75,7 @@ class Backbone.DeepModelBinder
 
     #allright, now let's loop through each part of the chain
     attributeParts = attribute.split('.')
-    currentAttributePath = null
+    currentAttributePath = ''
     currentBackboneObject = @model
     _.each(attributeParts, (attributePart, index, ignored) =>
       if currentBackboneObject? #stop if we encounter null/undefined in the chain (could be model/collection that hasn't been fetched yet)
@@ -86,7 +86,7 @@ class Backbone.DeepModelBinder
           attributeCollectionPart = collectionMatch[1] #ex: 'comments'
           attributeCollectionIndex = Number(collectionMatch[2]) #ex: 1
 
-          currentAttributePath += '.' if currentAttributePath?
+          currentAttributePath += '.' if currentAttributePath.length > 0
           currentAttributePath += attributeCollectionPart
           #now let's make sure to listen if this step (comments collection) in the chain changes (ie: replaced with a different collection)
           #  nestedModelPath = 'post.comments[1].author', currentAttributePath = 'post.comments', currentBackboneObject = <post model>, attributeCollectionPart = 'comments'
@@ -116,7 +116,7 @@ class Backbone.DeepModelBinder
 
           else
             #add to our currentAttributePath
-            currentAttributePath += '.' if currentAttributePath?
+            currentAttributePath += '.' if currentAttributePath.length > 0
             currentAttributePath += attributePart
 
             #ok we're not at the end of the chain yet (ex: 'post.comments[1].author'), first things first let's
