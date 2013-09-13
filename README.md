@@ -86,3 +86,7 @@ After the above call, the internal structure will look like:
 As part of creating this structure, the deep model binder binds to 'change' (for Backbone.Models) or
 'add remove sort reset' (for Backbone.Collections) events and when those events are triggered it
 rebuilds the chain and re-binds the leaf ModelBinder.
+
+Known Issues
+------------
+* Doesn't handle the case where the end of the chain is an actual model and not an attribute: 'post.comments[0]'
