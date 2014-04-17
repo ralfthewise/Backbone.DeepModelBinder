@@ -1,3 +1,4 @@
+#TODO: add functionality to bind to collection.length property
 class Backbone.DeepModelBinder
   _.extend(@prototype, Backbone.Events)
 
@@ -78,7 +79,7 @@ class Backbone.DeepModelBinder
     currentAttributePath = ''
     currentBackboneObject = @model
     _.each(attributeParts, (attributePart, index, ignored) =>
-      if currentBackboneObject? #stop if we encounter null/undefined in the chain (could be model/collection that hasn't been fetched yet)
+      if currentBackboneObject? #don't do our complex logic if we encounter null/undefined in the chain (model/collection that hasn't been fetched yet, or could just be null/undefined)
         @_validateBackboneModel(currentBackboneObject)
 
         if (collectionMatch = @constructor.collectionRegexp.exec(attributePart))
@@ -111,6 +112,7 @@ class Backbone.DeepModelBinder
           if index is (attributeParts.length - 1)
             #we're at the end/leaf (ex: 'post.comments[1].author.name'), let's bind this shit and be done with it
             #  nestedModelPath = 'post.comments[1].author', attributePart = 'name', currentBackboneObject = <author model>, binding = <what was passed in>
+            bindingChain.attributePathIsComplete = true #indicate that null/undefined wasn't encountered
             bindingChain.model = currentBackboneObject
             bindingChain.bindings[attributePart] = binding
 
@@ -127,6 +129,20 @@ class Backbone.DeepModelBinder
 
             #now let's get the next step in the chain and see if we can continue binding to it
             currentBackboneObject = currentBackboneObject.get(attributePart)
+
+      else
+        #TODO: if we encounter null/undefined in the chain, we still need to ultimately bind some model to the view.  consider:
+        #  m = new Backbone.Model({related: new Backbone.Model({prop: 'something'})})
+        #  # bind some view to 'related.prop' on m
+        #  m.unset('related')
+        #  # the view that was bound to 'related.prop' will not get updated
+
+        if bindingChain.attributePathIsComplete isnt false
+          bindingChain.attributePathIsComplete = false #indicate that null/undefined was encountered
+          bindingChain.model = new Backbone.Model()
+
+        if index is (attributeParts.length - 1)
+          bindingChain.bindings[attributePart] = binding
     )
 
   _validateBackboneModel: (backboneObject) ->

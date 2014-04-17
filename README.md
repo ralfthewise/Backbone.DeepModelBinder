@@ -90,3 +90,4 @@ rebuilds the chain and re-binds the leaf ModelBinder.
 Known Issues
 ------------
 * Doesn't handle the case where the end of the chain is an actual model and not an attribute: 'post.comments[0]'
+* Doesn't provide a way to bind to the collection length
